@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/cLion/YADRO/testTask/MyTape.h
+iTape.h
+D:/cLion/YADRO/testTask/iTape.h
+
+D:/cLion/YADRO/testTask/iTape.h
+iostream
+-
+
+D:/cLion/YADRO/testTask/sort.cpp
+sort.h
+D:/cLion/YADRO/testTask/sort.h
+
+D:/cLion/YADRO/testTask/sort.h
+fstream
+-
+MyTape.h
+D:/cLion/YADRO/testTask/MyTape.h
+vector
+D:/cLion/YADRO/testTask/vector
+

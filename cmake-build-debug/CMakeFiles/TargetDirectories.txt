@@ -1,0 +1,3 @@
+D:/cLion/YADRO/testTask/cmake-build-debug/CMakeFiles/testTask.dir
+D:/cLion/YADRO/testTask/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/cLion/YADRO/testTask/cmake-build-debug/CMakeFiles/rebuild_cache.dir

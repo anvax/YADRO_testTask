@@ -1,0 +1,3 @@
+Write/Read=0 ms
+Rewind=0 ms
+Shift=0 ms
