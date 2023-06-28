@@ -14,7 +14,7 @@ void sort::tmpTapes(MyTape &mtp) {
         TapeCount=mtp.length/ram+1;
     }
     for (int i = 1; i <=TapeCount ; i++) {
-        //ofstream file( string( "tmp\\tmp" + to_string( i ) +".txt" ).c_str());
+        //ofstream file( string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str());
         FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str(),"w");
         //file.close();
         fclose(fl);
