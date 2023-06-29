@@ -6,6 +6,7 @@
 void Tape::Configure(FILE* cfg,int *wr,int *r,int *s){
     char ch;
     string str,strwr,strr,strs;
+    //считывание конфига
     do{
         if (ch==10){
             str="";
@@ -45,6 +46,7 @@ void Tape::Configure(FILE* cfg,int *wr,int *r,int *s){
 }
 void Tape::ScanTape(FILE *input, int *length) {
     char ch;
+    //сканирование временной ленты на длину (разделители - пробелы)
     do{
         ch=fgetc(input);
         if(ch==EOF){
@@ -63,6 +65,7 @@ void Tape::ScanTape(FILE *input, int *length) {
 }
 void Tape::read(FILE *input, int *pos, int *ch, int length) {
     int position=*pos;
+    //так как лента циклична, то нужна проверка на сброс прозиции:
     if(abs(position)<length){
         if (position<0)
             (*pos)=length-abs(position);
@@ -81,6 +84,7 @@ void Tape::read(FILE *input, int *pos, int *ch, int length) {
     char symb;
     string num;
     int count=0;
+    //считывание ячейки ленты
     do{
         symb=fgetc(input);
         if(symb==EOF){
@@ -99,6 +103,7 @@ void Tape::read(FILE *input, int *pos, int *ch, int length) {
     (*ch)=stoi(num);
 }
 void Tape::write(FILE *output, int *pos, int *ch) {
+    //запись символа на выходную ленту
     string str=to_string(*ch);
     for(string::iterator it=str.begin();it!=str.end();it++){
         fputc(*it,output);
@@ -106,17 +111,19 @@ void Tape::write(FILE *output, int *pos, int *ch) {
     fputc(' ',output);
 }
 void Tape::left1(int *pos) {
-    (*pos)--;
+    (*pos)--;//смещение влево по ленте
 }
 void Tape::right1(int *pos) {
-    (*pos)++;
+    (*pos)++;//смещение вправо по ленте
 }
 void Tape::RewindLeft(int *pos, int count) {
+    //смещение влево на несколько ячеек
     for (int i = 0; i < count; i++) {
         (*pos)--;
     }
 }
 void Tape::RewindRight(int *pos, int count) {
+    //смещение вправо на несколько ячеек
     for (int i = 0; i < count; i++) {
         (*pos)++;
     }

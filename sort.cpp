@@ -6,6 +6,7 @@
 #include "Tape.h"
 
 void sort::tmpTapes(MyTape &mtp) {
+    //если оперативная память меньше, чем длина ленты
     if(ram<=mtp.length){
         if(mtp.length%ram==0){
             TapeCount=mtp.length/ram;
@@ -13,16 +14,16 @@ void sort::tmpTapes(MyTape &mtp) {
             TapeCount=mtp.length/ram+1;
         }
     }else{
-        TapeCount=1;
+        TapeCount=1;//иначе временная лента одна
     }
+    //создаем временные ленты
     for (int i = 1; i <=TapeCount ; i++) {
-        //ofstream file( string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str());
         FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str(),"w");
-        //file.close();
         fclose(fl);
     }
 }
 void sort::removeTmpTapes() {
+    //удаляем временные ленты
     for (int i = 1; i <=TapeCount ; i++) {
         remove(string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str());
     }
@@ -32,16 +33,17 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
     string fout=itape.fout;
     if(ram<=mtp.length){
         cout<<"Starting sorting temporary tapes..."<<endl;
+        //цикл по каждой ленте, кроме последней
         for (int k = 0; k < TapeCount-1; k++) {
-            int Mem[ram];
+            int Mem[ram];//память
             for (int i = ram*k; i < ram*(k+1); i++) {
                 mtp.pos=i;
                 mtp.Read(itape,input,fin);
                 mtp.MoveRightOne(itape);
                 Mem[i-ram*k]=mtp.ch;
             }
-            int temp; // временная переменная для обмена элементов местами
-            // Сортировка массива пузырьком
+            int temp;
+            //сортировка массива
             for (int i = 0; i < ram - 1; i++) {
                 for (int j = 0; j < ram - i - 1; j++) {
                     if (Mem[j] > Mem[j + 1]) {
@@ -52,17 +54,16 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
                     }
                 }
             }
-            //ofstream file( string( "tmp\\tmp" + to_string( k+1 ) +".txt" ).c_str());
+            //запись отсортированных данных на временную ленту
             FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( k+1 ) +".txt" ).c_str(),"w");
             mtp.pos=0;
             for (int j = 0; j < ram; j++) {
                 mtp.WriteFromRam(itape,fl,Mem[j]);
-                //file<<Mem[j]<<' ';
             }
             fclose(fl);
-            //file.close();
             cout<<k+1<<" temporary tape is sorted"<<endl;
         }
+        //запись в последнюю ленту
         if(mtp.length%ram==0){
             int Mem[ram];
             for (int i = ram*(TapeCount-1); i < mtp.length; i++) {
@@ -72,7 +73,7 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
                 Mem[i-ram*(TapeCount-1)]=mtp.ch;
             }
             int temp;
-            // Сортировка массива пузырьком
+            //сортировка массива
             for (int i = 0; i < ram - 1; i++) {
                 for (int j = 0; j < ram - i - 1; j++) {
                     if (Mem[j] > Mem[j + 1]) {
@@ -82,15 +83,13 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
                     }
                 }
             }
+            //запись
             FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( TapeCount ) +".txt" ).c_str(),"w");
             mtp.pos=0;
-            //ofstream file( string( "tmp\\tmp" + to_string( TapeCount ) +".txt" ).c_str());
             for (int j = 0; j < ram; j++) {
                 mtp.WriteFromRam(itape,fl,Mem[j]);
-                //file<<Mem[j]<<' ';
             }
             fclose(fl);
-            //file.close();
             cout<<TapeCount<<" temporary tape is sorted"<<endl;
         }else{
             int Mem[mtp.length%ram];
@@ -101,7 +100,7 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
                 Mem[i-ram*(TapeCount-1)]=mtp.ch;
             }
             int temp;
-            // Сортировка массива пузырьком
+            //сортировка массива
             for (int i = 0; i < mtp.length%ram - 1; i++) {
                 for (int j = 0; j < mtp.length%ram - i - 1; j++) {
                     if (Mem[j] > Mem[j + 1]) {
@@ -111,29 +110,26 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
                     }
                 }
             }
+            //запись
             FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( TapeCount ) +".txt" ).c_str(),"w");
             mtp.pos=0;
-            //ofstream file( string( "tmp\\tmp" + to_string( TapeCount ) +".txt" ).c_str());
             for (int j = 0; j < mtp.length%ram; j++) {
                 mtp.WriteFromRam(itape,fl,Mem[j]);
-                //file<<Mem[j]<<' ';
             }
             fclose(fl);
-            //file.close();
             cout<<TapeCount<<" temporary tape is sorted"<<endl;
         }
     }else{
         cout<<"Starting sorting tape..."<<endl;
         int Mem[mtp.length];
-        //cout<<mtp.length;
         for (int i = 0; i < mtp.length; i++) {
             mtp.pos=i;
             mtp.Read(itape,input,fin);
             mtp.MoveRightOne(itape);
             Mem[i]=mtp.ch;
         }
-        int temp; // временная переменная для обмена элементов местами
-        // Сортировка массива пузырьком
+        int temp;
+        //сортировка массива
         for (int i = 0; i < mtp.length - 1; i++) {
             for (int j = 0; j < mtp.length - i - 1; j++) {
                 if (Mem[j] > Mem[j + 1]) {
@@ -144,19 +140,20 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
                 }
             }
         }
-        //ofstream file( string( "tmp\\tmp" + to_string( k+1 ) +".txt" ).c_str());
+        //запись
         FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( 1 ) +".txt" ).c_str(),"w");
         mtp.pos=0;
         for (int j = 0; j < mtp.length; j++) {
             mtp.WriteFromRam(itape,fl,Mem[j]);
-            //file<<Mem[j]<<' ';
         }
         fclose(fl);
-        //file.close();
         cout<<1<<" temporary tape is sorted"<<endl;
     }
-
 }
+//сортировка временных лент в одну выходную (берется первый элемент в каждой ленте, ищется минимальный.
+// Минимальный элемент записывается в выходную ленту, а временная лента с этим элементов смещается вправо.
+// Дальше идет проверка нового элемента с предыдущими в других временных лентах и так до того момента, когда все
+// ленты дойдут до конца)
 void sort::SortTapes(MyTape &mtp, iTape &itape, FILE *output) {
     string fin=itape.fin;
     string fout=itape.fout;
@@ -179,6 +176,9 @@ void sort::SortTapes(MyTape &mtp, iTape &itape, FILE *output) {
         fclose(tmp[i]);
     }
     int min=INT32_MAX;
+    //проверка на то, что лента добежала до конца
+    //если вектор из лент, которые добежали не пуст,
+    //то данная лента не участвует в рассчете минимума
     for (int i = 0; i < TapeCount; i++) {
         flag=0;
         if(idError.empty()==false){
@@ -198,6 +198,7 @@ void sort::SortTapes(MyTape &mtp, iTape &itape, FILE *output) {
     bufId=idError;
     for (int i = 0; i < TapeCount; i++) {
         flag=0;
+        //если временная лента добежала до конца, то ее скипаем и не записываем в выходную ленту
         if(bufId.empty()==false){
             for (int j = 0; j < bufId.size(); j++) {
                 if (i==bufId.at(j)){
@@ -211,6 +212,7 @@ void sort::SortTapes(MyTape &mtp, iTape &itape, FILE *output) {
         tmp[i]=fopen(fname.c_str(),"r");
         //cout<<i<<" "<<ch[i]<<" "<<pos[i]<<" "<<min<<endl;
         cout<<"Processing..."<<endl;
+        //если символ минимум, то записываем его в выходную ленту и смещаемся по этой ленте вправо
         if(ch[i]==min){
             mtp.pos=pos[i];
             if(((ram-1)==pos[i])||(((sizeOfLastCh-1)==pos[TapeCount-1])&&(i==TapeCount-1))){
@@ -226,6 +228,7 @@ void sort::SortTapes(MyTape &mtp, iTape &itape, FILE *output) {
         }
         fclose(tmp[i]);
     }
+    //если все ленты дошли до конца, то сортировка завершена
     if(min!=INT32_MAX){
         goto start;
     }
