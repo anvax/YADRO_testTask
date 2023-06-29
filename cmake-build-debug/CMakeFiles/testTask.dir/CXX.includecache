@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-D:/cLion/YADRO/testTask/MyTape.cpp
-MyTape.h
-D:/cLion/YADRO/testTask/MyTape.h
-windows.h
-D:/cLion/YADRO/testTask/windows.h
-
 D:/cLion/YADRO/testTask/MyTape.h
 iTape.h
 D:/cLion/YADRO/testTask/iTape.h
@@ -33,12 +27,6 @@ iostream
 -
 vector
 -
-sort.h
-D:/cLion/YADRO/testTask/sort.h
-Tape.h
-D:/cLion/YADRO/testTask/Tape.h
-
-D:/cLion/YADRO/testTask/sort.cpp
 sort.h
 D:/cLion/YADRO/testTask/sort.h
 Tape.h

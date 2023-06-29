@@ -16,6 +16,7 @@ CMakeFiles/testTask.dir/main.cpp.obj: ../main.cpp
 CMakeFiles/testTask.dir/main.cpp.obj: ../sort.h
 
 CMakeFiles/testTask.dir/sort.cpp.obj: ../MyTape.h
+CMakeFiles/testTask.dir/sort.cpp.obj: ../Tape.h
 CMakeFiles/testTask.dir/sort.cpp.obj: ../iTape.h
 CMakeFiles/testTask.dir/sort.cpp.obj: ../sort.cpp
 CMakeFiles/testTask.dir/sort.cpp.obj: ../sort.h
