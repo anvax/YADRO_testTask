@@ -3,15 +3,17 @@
 //
 
 #include "sort.h"
-string fname="config.txt";
-string fin="input.txt";
-string fout="output.txt";
+#include "Tape.h"
 
 void sort::tmpTapes(MyTape &mtp) {
-    if(mtp.length%ram==0){
-        TapeCount=mtp.length/ram;
+    if(ram<=mtp.length){
+        if(mtp.length%ram==0){
+            TapeCount=mtp.length/ram;
+        }else{
+            TapeCount=mtp.length/ram+1;
+        }
     }else{
-        TapeCount=mtp.length/ram+1;
+        TapeCount=1;
     }
     for (int i = 1; i <=TapeCount ; i++) {
         //ofstream file( string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str());
@@ -20,20 +22,120 @@ void sort::tmpTapes(MyTape &mtp) {
         fclose(fl);
     }
 }
+void sort::removeTmpTapes() {
+    for (int i = 1; i <=TapeCount ; i++) {
+        remove(string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str());
+    }
+}
 void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
-    cout<<"Starting sorting temporary tapes..."<<endl;
-    for (int k = 0; k < TapeCount-1; k++) {
-        int Mem[ram];
-        for (int i = ram*k; i < ram*(k+1); i++) {
+    string fin=itape.fin;
+    string fout=itape.fout;
+    if(ram<=mtp.length){
+        cout<<"Starting sorting temporary tapes..."<<endl;
+        for (int k = 0; k < TapeCount-1; k++) {
+            int Mem[ram];
+            for (int i = ram*k; i < ram*(k+1); i++) {
+                mtp.pos=i;
+                mtp.Read(itape,input,fin);
+                mtp.MoveRightOne(itape);
+                Mem[i-ram*k]=mtp.ch;
+            }
+            int temp; // временная переменная для обмена элементов местами
+            // Сортировка массива пузырьком
+            for (int i = 0; i < ram - 1; i++) {
+                for (int j = 0; j < ram - i - 1; j++) {
+                    if (Mem[j] > Mem[j + 1]) {
+                        // меняем элементы местами
+                        temp = Mem[j];
+                        Mem[j] = Mem[j + 1];
+                        Mem[j + 1] = temp;
+                    }
+                }
+            }
+            //ofstream file( string( "tmp\\tmp" + to_string( k+1 ) +".txt" ).c_str());
+            FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( k+1 ) +".txt" ).c_str(),"w");
+            mtp.pos=0;
+            for (int j = 0; j < ram; j++) {
+                mtp.WriteFromRam(itape,fl,Mem[j]);
+                //file<<Mem[j]<<' ';
+            }
+            fclose(fl);
+            //file.close();
+            cout<<k+1<<" temporary tape is sorted"<<endl;
+        }
+        if(mtp.length%ram==0){
+            int Mem[ram];
+            for (int i = ram*(TapeCount-1); i < mtp.length; i++) {
+                mtp.pos=i;
+                mtp.Read(itape,input,fin);
+                mtp.MoveRightOne(itape);
+                Mem[i-ram*(TapeCount-1)]=mtp.ch;
+            }
+            int temp;
+            // Сортировка массива пузырьком
+            for (int i = 0; i < ram - 1; i++) {
+                for (int j = 0; j < ram - i - 1; j++) {
+                    if (Mem[j] > Mem[j + 1]) {
+                        temp = Mem[j];
+                        Mem[j] = Mem[j + 1];
+                        Mem[j + 1] = temp;
+                    }
+                }
+            }
+            FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( TapeCount ) +".txt" ).c_str(),"w");
+            mtp.pos=0;
+            //ofstream file( string( "tmp\\tmp" + to_string( TapeCount ) +".txt" ).c_str());
+            for (int j = 0; j < ram; j++) {
+                mtp.WriteFromRam(itape,fl,Mem[j]);
+                //file<<Mem[j]<<' ';
+            }
+            fclose(fl);
+            //file.close();
+            cout<<TapeCount<<" temporary tape is sorted"<<endl;
+        }else{
+            int Mem[mtp.length%ram];
+            for (int i = ram*(TapeCount-1); i < mtp.length; i++) {
+                mtp.pos=i;
+                mtp.Read(itape,input,fin);
+                mtp.MoveRightOne(itape);
+                Mem[i-ram*(TapeCount-1)]=mtp.ch;
+            }
+            int temp;
+            // Сортировка массива пузырьком
+            for (int i = 0; i < mtp.length%ram - 1; i++) {
+                for (int j = 0; j < mtp.length%ram - i - 1; j++) {
+                    if (Mem[j] > Mem[j + 1]) {
+                        temp = Mem[j];
+                        Mem[j] = Mem[j + 1];
+                        Mem[j + 1] = temp;
+                    }
+                }
+            }
+            FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( TapeCount ) +".txt" ).c_str(),"w");
+            mtp.pos=0;
+            //ofstream file( string( "tmp\\tmp" + to_string( TapeCount ) +".txt" ).c_str());
+            for (int j = 0; j < mtp.length%ram; j++) {
+                mtp.WriteFromRam(itape,fl,Mem[j]);
+                //file<<Mem[j]<<' ';
+            }
+            fclose(fl);
+            //file.close();
+            cout<<TapeCount<<" temporary tape is sorted"<<endl;
+        }
+    }else{
+        cout<<"Starting sorting tape..."<<endl;
+        int Mem[mtp.length];
+        //cout<<mtp.length;
+        for (int i = 0; i < mtp.length; i++) {
             mtp.pos=i;
             mtp.Read(itape,input,fin);
             mtp.MoveRightOne(itape);
-            Mem[i-ram*k]=mtp.ch;
+            Mem[i]=mtp.ch;
         }
         int temp; // временная переменная для обмена элементов местами
         // Сортировка массива пузырьком
-        for (int i = 0; i < ram - 1; i++) {
-            for (int j = 0; j < ram - i - 1; j++) {
+        for (int i = 0; i < mtp.length - 1; i++) {
+            for (int j = 0; j < mtp.length - i - 1; j++) {
                 if (Mem[j] > Mem[j + 1]) {
                     // меняем элементы местами
                     temp = Mem[j];
@@ -43,77 +145,21 @@ void sort::sortEachTmpTape(MyTape &mtp, iTape &itape, FILE *input) {
             }
         }
         //ofstream file( string( "tmp\\tmp" + to_string( k+1 ) +".txt" ).c_str());
-        FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( k+1 ) +".txt" ).c_str(),"w");
+        FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( 1 ) +".txt" ).c_str(),"w");
         mtp.pos=0;
-        for (int j = 0; j < ram; j++) {
+        for (int j = 0; j < mtp.length; j++) {
             mtp.WriteFromRam(itape,fl,Mem[j]);
             //file<<Mem[j]<<' ';
         }
         fclose(fl);
         //file.close();
-        cout<<k+1<<" temporary tape is sorted"<<endl;
+        cout<<1<<" temporary tape is sorted"<<endl;
     }
-    if(mtp.length%ram==0){
-        int Mem[ram];
-        for (int i = ram*(TapeCount-1); i < mtp.length; i++) {
-            mtp.pos=i;
-            mtp.Read(itape,input,fin);
-            mtp.MoveRightOne(itape);
-            Mem[i-ram*(TapeCount-1)]=mtp.ch;
-        }
-        int temp;
-        // Сортировка массива пузырьком
-        for (int i = 0; i < ram - 1; i++) {
-            for (int j = 0; j < ram - i - 1; j++) {
-                if (Mem[j] > Mem[j + 1]) {
-                    temp = Mem[j];
-                    Mem[j] = Mem[j + 1];
-                    Mem[j + 1] = temp;
-                }
-            }
-        }
-        FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( TapeCount ) +".txt" ).c_str(),"w");
-        mtp.pos=0;
-        //ofstream file( string( "tmp\\tmp" + to_string( TapeCount ) +".txt" ).c_str());
-        for (int j = 0; j < ram; j++) {
-            mtp.WriteFromRam(itape,fl,Mem[j]);
-            //file<<Mem[j]<<' ';
-        }
-        fclose(fl);
-        //file.close();
-        cout<<TapeCount<<" temporary tape is sorted"<<endl;
-    }else{
-        int Mem[mtp.length%ram];
-        for (int i = ram*(TapeCount-1); i < mtp.length; i++) {
-            mtp.pos=i;
-            mtp.Read(itape,input,fin);
-            mtp.MoveRightOne(itape);
-            Mem[i-ram*(TapeCount-1)]=mtp.ch;
-        }
-        int temp;
-        // Сортировка массива пузырьком
-        for (int i = 0; i < mtp.length%ram - 1; i++) {
-            for (int j = 0; j < mtp.length%ram - i - 1; j++) {
-                if (Mem[j] > Mem[j + 1]) {
-                    temp = Mem[j];
-                    Mem[j] = Mem[j + 1];
-                    Mem[j + 1] = temp;
-                }
-            }
-        }
-        FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( TapeCount ) +".txt" ).c_str(),"w");
-        mtp.pos=0;
-        //ofstream file( string( "tmp\\tmp" + to_string( TapeCount ) +".txt" ).c_str());
-        for (int j = 0; j < ram; j++) {
-            mtp.WriteFromRam(itape,fl,Mem[j]);
-            //file<<Mem[j]<<' ';
-        }
-        fclose(fl);
-        //file.close();
-        cout<<TapeCount<<" temporary tape is sorted"<<endl;
-    }
+
 }
 void sort::SortTapes(MyTape &mtp, iTape &itape, FILE *output) {
+    string fin=itape.fin;
+    string fout=itape.fout;
     int ch[TapeCount];
     int pos[TapeCount];
     for (int i = 0; i < TapeCount; i++) {

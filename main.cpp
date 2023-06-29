@@ -4,36 +4,37 @@
 #include "Tape.h"
 
 using namespace std;
-const char* fname="config.txt";
 
 
 int main() {
-    string fin;
-    string fout;
+    Tape tp;
+    MyTape mtp;
+    sort sort;
+    sort.removeTmpTapes();
     cout<<"Enter the name of the input file (with .txt):"<<endl;
-    cin>>fin;
+    cin>>tp.fin;
     cout<<"Enter the name of the output file (with .txt):"<<endl;
-    cin>>fout;
-    FILE* cfg=fopen(fname,"r");
-    FILE* input=fopen(fin.c_str(),"r");
-    FILE* output=fopen(fout.c_str(),"w");
+    cin>>tp.fout;
+
+    FILE* cfg=fopen(tp.fname.c_str(),"r");
+    FILE* input=fopen(tp.fin.c_str(),"r");
+    FILE* output=fopen(tp.fout.c_str(),"w");
+
     if(cfg==NULL){
         cout<<"No config file"<<endl;
         exit(0);
     }else{
-        cout<<"Config is open: "<<fname<<endl;
+        cout<<"Config is open: "<<tp.fname.c_str()<<endl;
     }
-    Tape tp;
-    MyTape mtp;
+
     mtp.loadConfig(tp,cfg);
     fclose(cfg);
     mtp.ScanTape(tp,input);
-
-    input=fopen(fin.c_str(),"r");
-    sort sort;
+    input=fopen(tp.fin.c_str(),"r");
     sort.tmpTapes(mtp);
     sort.sortEachTmpTape(mtp,tp,input);
     sort.SortTapes(mtp,tp,output);
+
     fclose(output);
     return 0;
 }

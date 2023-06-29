@@ -9,6 +9,9 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+//const char* fname="config.txt";
+
+
 
 class Tape: public iTape{
 public:

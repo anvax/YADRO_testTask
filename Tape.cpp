@@ -47,10 +47,19 @@ void Tape::ScanTape(FILE *input, int *length) {
     char ch;
     do{
         ch=fgetc(input);
+        if(ch==EOF){
+            break;
+        }
         if(ch==' '){
-            (*length)++;
+            ch=fgetc(input);
+            if (ch!=EOF && ((ch=='0')||(ch=='1')||(ch=='2')||(ch=='3')||(ch=='4')||(ch=='5')||(ch=='6')||(ch=='7')||(ch=='8')||(ch=='9'))){
+                (*length)++;
+            }else{
+                break;
+            }
         }
     }while (ch!=EOF);
+    (*length)++;
 }
 void Tape::read(FILE *input, int *pos, int *ch, int length) {
     int position=*pos;
