@@ -16,15 +16,31 @@ void sort::tmpTapes(MyTape &mtp) {
     }else{
         TapeCount=1;//иначе временная лента одна
     }
+    //проверка - хватит ли озу на работу с временными лентами одновременно
+    if (TapeCount>ram){
+        cout<<"Not enough RAM"<<endl;
+        exit(0);
+    }
     //создаем временные ленты
     for (int i = 1; i <=TapeCount ; i++) {
         FILE* fl=fopen(string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str(),"w");
         fclose(fl);
     }
 }
-void sort::removeTmpTapes() {
+void sort::removeTmpTapes(MyTape &mtp) {
+    int tpCount=0;
+    //если оперативная память меньше, чем длина ленты
+    if(ram<=mtp.length){
+        if(mtp.length%ram==0){
+            tpCount=mtp.length/ram;
+        }else{
+            tpCount=mtp.length/ram+1;
+        }
+    }else{
+        tpCount=1;//иначе временная лента одна
+    }
     //удаляем временные ленты
-    for (int i = 1; i <=TapeCount ; i++) {
+    for (int i = 1; i <=tpCount ; i++) {
         remove(string( "tmp\\tmpTape" + to_string( i ) +".txt" ).c_str());
     }
 }

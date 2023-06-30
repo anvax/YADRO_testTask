@@ -9,7 +9,6 @@ int main() {
     Tape tp;
     MyTape mtp;
     sort sort;
-    sort.removeTmpTapes();//удаление временных лент
     //ввод названий файлов
     cout<<"Enter the name of the input file (with .txt):"<<endl;
     cin>>tp.fin;
@@ -30,6 +29,7 @@ int main() {
     mtp.loadConfig(tp,cfg);//загружаем коонфиг
     fclose(cfg);
     mtp.ScanTape(tp,input);//сканируем ленту на размер
+    sort.removeTmpTapes(mtp);//удаление старых временных лент
     input=fopen(tp.fin.c_str(),"r");
     sort.tmpTapes(mtp);//создаем временные ленты
     sort.sortEachTmpTape(mtp,tp,input);//сортируем временные ленты

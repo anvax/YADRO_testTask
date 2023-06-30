@@ -17,7 +17,7 @@ public:
     void tmpTapes(MyTape &mtp);//создаем временные ленты
     void sortEachTmpTape(MyTape &mtp,iTape &itape,FILE *input);//сортируем каждую временную ленту
     void SortTapes(MyTape &mtp,iTape &itape,FILE* output);//сортируем все временные ленты между собой в одну выходную ленту
-    void removeTmpTapes();
+    void removeTmpTapes(MyTape &mtp);
 };
 
 
